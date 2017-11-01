@@ -4,7 +4,7 @@ pipeline {
         stage('Build and Test') {
             steps {
                 sh "docker build -t afalko/hello-world-app:${BUILD_ID} ."
-				sh "[ 'Hello! Java works!\n' == \"`docker run --rm afalko/hello-world-app:${BUILD_ID}`\" ]"
+				sh "[ 'Hello! Java works!' == \"`docker run --rm afalko/hello-world-app:${BUILD_ID}`\" ]"
             }
         }
         stage('Publish') {

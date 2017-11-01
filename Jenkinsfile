@@ -4,10 +4,7 @@ pipeline {
         stage('Build and Test') {
             steps {
                 sh "docker build -t afalko/hello-world-app:${BUILD_ID} ."
-				def appOutput = sh("docker run --rm afalko/hello-world-app:${BUILD_ID}", returnStdout: true)
-				if (appOutput.trim() != "Hello! Java works!") {
-					error("Unexpected output: " + appOutput)
-				}
+				sh "[ 'Hello! Java works!\n' -eq `docker run --rm afalko/hello-world-app:${BUILD_ID}` ]"
             }
         }
         stage('Publish') {

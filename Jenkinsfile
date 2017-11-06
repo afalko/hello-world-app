@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Build and Test') {
             steps {
-                sh "Build number is ${BUILD_NUMBER}. Build id is ${BUILD_ID}"
+                sh "echo Build number is ${BUILD_NUMBER}. Build id is ${BUILD_ID}"
                 sh "docker build -t afalko/hello-world-app:${BUILD_ID} ."
 				sh "[ 'Hello! Java works!' == \"`docker run --rm afalko/hello-world-app:${BUILD_ID}`\" ]"
             }

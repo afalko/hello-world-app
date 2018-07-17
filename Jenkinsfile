@@ -4,11 +4,11 @@ pipeline {
         stage('Build and Test') {
             steps {
                 sh "docker build -t afalko/hello-world-app:${BUILD_ID} ."
-				sh "[ 'Hello! Java works!' == \"`docker run --rm afalko/hello-world-app:${BUILD_ID}`\" ]"
+                sh "[ 'Hello! Java works!' == \"`docker run --rm afalko/hello-world-app:${BUILD_ID}`\" ]"
             }
         }
         stage('Publish') {
-		    environment { 
+            environment { 
                 DOCKER_PASSWORD = credentials('DOCKER_PASSWORD') 
             }
             when {
@@ -27,11 +27,11 @@ pipeline {
                     BRANCH_NAME == "master"
                 }
             }
-		    environment {
-				git_api_url = 'https://api.github.com'
-				git_api_token = credentials('DOCKERFILE_IMAGE_UPDATE_TOKEN')
-				image_map_store = 'docker-tag-store-df17-demo'
-			}
+            environment {
+                git_api_url = 'https://api.github.com'
+                git_api_token = credentials('DOCKERFILE_IMAGE_UPDATE_TOKEN')
+                image_map_store = 'docker-tag-store-df17-demo'
+            }
             steps {
                 sh "docker run --rm -e git_api_token -e git_api_url \
 					salesforce/dockerfile-image-update --org afalko \

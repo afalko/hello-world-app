@@ -1,4 +1,4 @@
-FROM afalko/alpine-java:13
+FROM afalko/alpine-java:6
 
 ADD HelloWorld.java /
 RUN javac /HelloWorld.java

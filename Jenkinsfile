@@ -17,8 +17,14 @@ pipeline {
                 }
             }
             steps {
-			    sh "docker login -u afalko -p ${DOCKER_PASSWORD}"
+                sh "echo ${DOCKER_PASSWORD} | docker login -u afalko --password-stdin"
                 sh "docker push afalko/hello-world-app:${BUILD_ID}"
+                // Push to GCR for vulnerability analysis
+                withCredentials([file(credentialsId: 'gcr-push', variable: 'KEYFILE')]) {
+                    sh "docker login -u _json_key --password-stdin https://gcr.io < ${KEYFILE}"
+                }
+                sh "docker tag afalko/alpine-python:${BUILD_ID} gcr.io/eternal-autumn-215306/alpine-python:${BUILD_ID}"
+                sh "docker push gcr.io/eternal-autumn-215306/alpine-python:${BUILD_ID}"
             }
         }
         stage('Update Docker Images') {
@@ -30,7 +36,7 @@ pipeline {
             environment {
                 git_api_url = 'https://api.github.com'
                 git_api_token = credentials('DOCKERFILE_IMAGE_UPDATE_TOKEN')
-                image_map_store = 'docker-tag-store-df17-demo'
+                image_map_store = 'docker-tag-store-demo'
             }
             steps {
                 sh "docker run --rm -e git_api_token -e git_api_url \
